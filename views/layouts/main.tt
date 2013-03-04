@@ -60,10 +60,10 @@
         <li>
           <h3>Help</h3>
           <ul class="links">
-            <li><a href="http://cougarcs.com/">CougarCS home</a></li>
-            <li><a href="http://github.com/cougarcs">CougarCS on GitHub</a></li>
-            <li><a href="http://webchat.freenode.net/?channels=#cougarcs">Chat on IRC!</a></li>
-            <li><a href="http://try.github.com/">Learn to use Git</a></li>
+            <li><a target="_blank" href="http://cougarcs.com/">CougarCS home</a></li>
+            <li><a target="_blank" href="http://github.com/cougarcs">CougarCS on GitHub</a></li>
+            <li><a target="_blank" href="http://webchat.freenode.net/?channels=#cougarcs">Chat on IRC!</a></li>
+            <li><a target="_blank" href="http://try.github.com/">Learn to use Git</a></li>
           </ul>
         </li>
       </ul>
