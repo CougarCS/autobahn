@@ -34,7 +34,4 @@
 	<% END %>
 	<% END %>
 	<% INCLUDE profilelist.tt profiles=others_interested %>
-	
-	<END
-
   </div>
