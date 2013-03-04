@@ -1,0 +1,5 @@
+		<ul class="skill-list tags">
+		<% FOREACH skill IN skills %>
+			<li><span class="tag"><a href="<% skill.url %>"><% skill.name | html %></a></span></li>
+		<% END %>
+		</ul>

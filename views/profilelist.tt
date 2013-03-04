@@ -1,0 +1,16 @@
+<div id="gallery" class="clearfix">
+	<ul class="profile-list" id="main">
+	<% FOREACH profile IN profiles %>
+		<li>
+			<a href="<% profile.url %>">
+				<% IF profile.avatarurl %><img class="profile-avatar" src="<% profile.avatarurl %>"/><% END %>
+				<% IF profile.name %>
+				<p><% profile.nick %> (<% profile.name | html %>)</p>
+				<% ELSE %>
+				<p><% profile.nick | html %></p>
+				<% END %>
+			</a>
+		</li>
+	<% END %>
+	</ul>
+</div>

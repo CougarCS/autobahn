@@ -1,0 +1,13 @@
+  <div id="content">
+    <form name="profile-data" method="POST">
+      <ul class="formlist">
+        <li><label>Profile description<br/> <textarea id="description" name="description" rows="5" cols="50"></textarea></label></li>
+        <li><label>Skills acquired (e.g. c, machine learning, yacc)<br/> <input class="skilltags" name="skills-acquired"/></label></li>
+        <li><label>Skills to learn (e.g. c, machine learning, yacc)<br/> <input class="skilltags" name="skills-tolearn"/></label></li>
+        <li class="button"><button type="submit" name="update-profile">Update profile</button></li>
+      </ul>
+    </form>
+    <script type="text/javascript">
+      $('.skilltags').tagsInput();
+    </script>
+  </div>

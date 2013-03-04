@@ -25,3 +25,26 @@ show_errors: 1
 # DO NOT EVER USE THIS FEATURE IN PRODUCTION 
 # OR TINY KITTENS SHALL DIE WITH LOTS OF SUFFERING
 auto_reload: 0
+
+plugins:
+  DBIC:
+    default:
+      dsn:  "dbi:SQLite:dbname=dev.db"
+      schema_class:  "autobahn::Schema"
+
+plack_middlewares:
+  -
+    - "+Dancer::Middleware::Rebase"
+    - base
+    - "http://autobahn.cougarcs.com"
+    - strip
+    - 1
+  #-
+    #- Debug
+    #- panels
+    #-
+      #- Parameters
+      #- Dancer::Version
+      #- Dancer::Settings
+      #- Dancer::Logger
+      ##- Dancer::Routes

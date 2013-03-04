@@ -1,0 +1,10 @@
+# https://upload.wikimedia.org/wikipedia/commons/b/b4/Zeichen_330.svg
+rsvg-convert Zeichen_330.svg > autobahn-big.png
+convert -geometry 64 autobahn-big.png autobahn.png
+convert -geometry 16 autobahn.png ../favicon.ico
+rsvg-convert Zeichen_330_mod.svg > autobahn-big.png
+#cp -p autobahn-big.png autobahn-bg.png
+convert autobahn-big.png -fx '0.1*r+0.1*g+0.9*b' autobahn-bg.png
+
+rsvg-convert octocat.svg > octocat.png
+mogrify -trim -geometry 24 -flip octocat.png

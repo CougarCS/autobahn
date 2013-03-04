@@ -1,0 +1,4 @@
+	<div id="content">
+		<h2>All profiles</h2>
+		<% INCLUDE profilelist.tt profiles=profiles %>
+	</div>

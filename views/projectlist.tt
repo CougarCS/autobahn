@@ -1,0 +1,5 @@
+		<ul class="project-list">
+		<% FOREACH project IN projects %>
+			<li><a href="<% project.url %>"><% project.name | html %></a></li>
+		<% END %>
+		</ul>

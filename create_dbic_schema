@@ -1,0 +1,6 @@
+#!/bin/sh
+dbicdump -o dump_directory=./lib \
+         -o debug=1 \
+         autobahn::Schema \
+         'dbi:SQLite:dbname=dev.db'
+#-o components='["InflateColumn::DateTime"]' \

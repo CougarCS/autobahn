@@ -1,0 +1,17 @@
+  <div id="content">
+    <form name="project-data" method="POST">
+      <ul class="formlist">
+        <li><label>Project name (e.g. My super-awesome text editor)<br/> <input type="text" id="title" name="title" size="50"/></label></li>
+        <li><label>GitHub repository URL (e.g. http://github.com/c0der/tops3cr37)<br/> <input type="text" id="repourl" name="repourl" size="50"/></label></li>
+        <li><label>Project description<br/> <textarea id="description" name="description" rows="5" cols="50"></textarea></label></li>
+        <li><label>Skills involved (e.g. c, machine learning, yacc)<br/> <input id="skilltags" name="skills"/></label></li>
+        <li class="button"><button type="submit" name="update-project">Update project</button></li>
+      </ul>
+    </form>
+    <script type="text/javascript">
+      $('#skilltags').tagsInput();
+    </script>
+    <form name="delete-project" method="POST">
+        <button type="submit" name="delete-project">Delete project</button>
+    </form>
+  </div>

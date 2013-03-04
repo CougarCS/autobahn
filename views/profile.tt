@@ -1,0 +1,55 @@
+  <div id="content">
+		<div class="profile-head">
+			<% IF profile_avatar %>
+			  <img class="profile-avatar" src="<% profile_avatar %>"/>
+			<% END %>
+			<h2>
+				<% name | html %>
+				<% INCLUDE githublink.tt github_link=github_url %>
+			</h2> 
+		</div>
+		<p><% description | html %></p>
+
+		<h3>Projects started</h2>
+		<% IF projects.started && projects.started.size %>
+		<% INCLUDE projectlist.tt projects=projects.started %>
+		<% ELSIF logged_in_user_profile %>
+		<% INCLUDE createprojectform.tt %>
+		<% ELSE %>
+		No projects started yet.
+		<% END %>
+
+		<h3>Projects interested in</h2>
+		<% IF projects.interested && projects.interested.size %>
+		<% INCLUDE projectlist.tt projects=projects.interested %>
+		<% ELSIF logged_in_user_profile %>
+		<a href="<% projects_url %>">Find projects to work on!</a>
+		<% ELSE %>
+		Not interested in any projects yet.
+		<% END %>
+
+		<h3>Skills acquired</h3>
+		<% IF skills.have && skills.have.size %>
+		<% INCLUDE skilllist.tt skills=skills.have %>
+		<% ELSIF logged_in_user_profile %>
+		<a href="<% profile_edit_url %>">Edit your profile</a> and add the skills you have!
+		<% ELSE %>
+		No skills added yet.
+		<% END %>
+
+		<h3>Skills to learn</h3>
+		<% IF skills.want and skills.want.size %>
+		<% INCLUDE skilllist.tt skills=skills.want %>
+		<% ELSIF logged_in_user_profile %>
+		<a href="<% profile_edit_url %>">Edit your profile</a> and add the skills you want to develop!
+		<% ELSE %>
+		No skills added yet.
+		<% END %>
+
+		<% IF logged_in_user_profile %>
+		<p>
+		<a href="<% profile_edit_url %>">Edit profile</a>
+		</p>
+		<% END %>
+
+  </div>

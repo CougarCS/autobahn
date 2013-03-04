@@ -1,0 +1,40 @@
+  <div id="content">
+		<div class="project-head">
+			<h2>
+				<% name | html %>
+				<% INCLUDE githublink.tt github_link=github_repo %>
+			</h2> 
+		</div>
+				<% IF logged_in %>
+				<% IF project_creator_logged_in %>
+				<p><a href="<% project_edit_url %>">Edit project</a></p>
+				<% END %>
+				<% END %>
+		<p>Project started by:
+				<a href="<% creator_profile_url %>">
+				<% IF creator_profile_name %>
+				<% creator_profile_nick | html %> (<% creator_profile_name | html %>)
+				<% ELSE %>
+				<% creator_profile_nick | html %>
+				<% END %>
+				</a>
+				</p>
+
+		<% IF description %>
+		<h3>Description</h3>
+		<p><% description | html %></p>
+		<% END %>
+		<h3>Skills involved<h3>
+		<% INCLUDE skilllist.tt skills=skills %>
+
+	<h3>Others interested</h3>
+	<% IF logged_in %>
+	<% UNLESS project_creator_logged_in %>
+	<% INCLUDE projectinterestform.tt project_interest_url=project_interest_url has_interest=has_interest %>
+	<% END %>
+	<% END %>
+	<% INCLUDE profilelist.tt profiles=others_interested %>
+	
+	<END
+
+  </div>

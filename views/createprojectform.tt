@@ -1,0 +1,3 @@
+          <form  method="post" action="<% request.uri_base %>/project">
+            <button type="submit" name="new-project">Create a new project</button>
+          </form>

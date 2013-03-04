@@ -1,0 +1,5 @@
+~/autobahn_log/info/conf
+  /etc/logrotate.conf
+/etc/apache2/sites-available/autobahn.cougarcs.com.conf
+/etc/bind/named.conf.local
+  /var/lib/bind/cougarcs.com.hosts

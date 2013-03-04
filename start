@@ -1,0 +1,2 @@
+#!/bin/sh
+plackup --port 8585 ./bin/app.pl

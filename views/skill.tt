@@ -1,0 +1,22 @@
+	<div id="content">
+		<div class="skill-head">
+			<h2>
+				<% name | html %>
+			</h2> 
+		</div>
+
+		<% IF profiles.have and profiles.have.size %>
+		<h3>Know<h3>
+		<% INCLUDE profilelist.tt profiles=profiles.have %>
+		<% END %>
+
+		<% IF profiles.want and profiles.want.size %>
+		<h3>Want to know<h3>
+		<% INCLUDE profilelist.tt profiles=profiles.want %>
+		<% END %>
+
+		<% IF projects and projects.size %>
+		<h3>Used in<h3>
+		<% INCLUDE projectlist.tt projects=projects %>
+		<% END %>
+	</div>

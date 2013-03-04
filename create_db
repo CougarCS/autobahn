@@ -1,0 +1,2 @@
+sqlite3 -echo dev.db < schema.sql
+sqlite3 -echo production.db < schema.sql

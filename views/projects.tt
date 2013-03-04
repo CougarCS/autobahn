@@ -1,0 +1,4 @@
+  <div id="content">
+		<h2>All projects</h2>
+		<% INCLUDE projectlist.tt projects=projects %>
+  </div>

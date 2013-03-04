@@ -1,0 +1,7 @@
+          <form  method="post" action="<% project_interest_url %>">
+	  <% UNLESS has_interest %>
+	    <button type="submit" name="project-interest">I'm interested in this project!</button>
+	  <% ELSE %>
+	    <button type="submit" name="project-interest">Actually, could you remove me from this project?</button>
+	  <% END %>
+          </form>

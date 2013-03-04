@@ -1,0 +1,3 @@
+				<% IF github_link %>
+				<a class="image-link" target="_blank" title="GitHub page" alt="GitHub page" href="<% github_link %>"><img src="<% request.base %>/images/octocat.png"/></a>
+				<% END %>

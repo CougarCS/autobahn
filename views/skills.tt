@@ -1,0 +1,10 @@
+  <div id="content">
+		<h2>Skills people have</h2>
+		<% INCLUDE skilllist.tt skills=skills_have %>
+
+		<h2>Skills people want to learn</h2>
+		<% INCLUDE skilllist.tt skills=skills_want %>
+
+		<h2>Skills used in projects</h2>
+		<% INCLUDE skilllist.tt skills=skills_project %>
+  </div>

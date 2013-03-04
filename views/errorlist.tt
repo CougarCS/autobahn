@@ -1,0 +1,5 @@
+	<ul class="error-list">
+	<% FOREACH error IN errors %>
+		<li><% error %></li>
+	<% END %>
+	</ul>
