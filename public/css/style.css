@@ -1,7 +1,7 @@
 @media all and (min-width: 563px) {
   #sidebar {
-		float: left;
-		width: 145px;
+		float: right;
+		width: 155px;
 	}
 
 	#sidebar ul {
