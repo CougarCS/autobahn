@@ -33,6 +33,10 @@
     </ul>
   </div>
   <div id="page">
+    <% IF flash_msg %>
+    <div class=flash> <% flash_msg %> </div>
+    <% END %>
+    <% content %>
     <div id="sidebar">
       <ul id="sidebar-items">
         <li>
@@ -65,10 +69,6 @@
       </ul>
 
     </div>
-    <% IF flash_msg %>
-    <div class=flash> <% flash_msg %> </div>
-    <% END %>
-    <% content %>
   </div>
 <div id="footer">
 Powered by <a href="http://perldancer.org/">Dancer</a> <% dancer_version %>
