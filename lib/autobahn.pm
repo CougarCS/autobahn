@@ -24,6 +24,7 @@ set 'layout'      => 'main';
 #by default success will redirect to this route
 get '/' => sub {#{{{
 	template 'index', {
+		page_title => 'Welcome!',
 		on_home => 1,
 		# TODO
 		#events => [
@@ -37,6 +38,7 @@ get '/projects' => sub {#{{{
 	my @projects = schema->resultset('Project')
 		->search({}, { order_by => 'title' })->all;
 	template 'projects', {
+		page_title => 'Projects',
 		on_projects => 1,
 		projects => [ project_map( @projects ) ]
 	}
@@ -45,6 +47,7 @@ get '/profiles' => sub {#{{{
 	my @profiles = schema->resultset('Profile')
 		->search({}, { order_by => 'fullname' })->all;
 	template 'profiles', {
+		page_title => 'Profiles',
 		on_profiles => 1,
 		profiles => [ profile_map(@profiles) ]
 	}
@@ -57,6 +60,7 @@ get '/skills' => sub {#{{{
 	my $skills_project_rs = schema->resultset('Projectskill')->search({},
 		{ prefetch => 'skillid', group_by => [qw/me.skillid/], order_by => 'skillid.name'  });
 	template 'skills', {
+		page_title => 'Skills',
 		on_skills => 1,
 		skills_have => [ skill_map(map { $_->skillid } $skills_have_rs->all) ],
 		skills_want => [ skill_map(map { $_->skillid } $skills_want_rs->all) ],
@@ -81,6 +85,7 @@ get '/profile/:username' => sub {#{{{
 		->search({ userid => $profile->userid, skillstate => USERSKILLSTATE_WANT },
 		{ prefetch => 'skillid', order_by => 'skillid.name' });
 	template 'profile', { 
+		page_title => 'Profile: '.$profile->fullname,
 		name => $profile->fullname,
 		profile_avatar =>
 					schema->resultset('Useravatar')
@@ -177,6 +182,7 @@ get '/skill/:skillname' => sub {#{{{
 		skillstate => USERSKILLSTATE_HAVE });
 	my $projects_rs = schema->resultset('Projectskill')->search({ skillid => $skill->skillid });
 	template 'skill', { 
+			page_title => 'Skill: '.$skill->name,
 			name => $skill->name,
 			profiles => {
 				have => [ profile_map( map { $_->userid } $skill_have_rs->all ) ],
@@ -226,6 +232,7 @@ get '/project/:projectid' => sub {#{{{
 	my @others_interested = map { $_->userid } schema->resultset('Userprojectinterest')
 		->search({ projectid => $project->projectid })->all;
 	template 'project', { 
+			page_title => 'Project: '.$project->title,
 			name => $project->title,
 			github_repo => $project->githubrepo,
 			description => $project->description,
@@ -686,7 +693,6 @@ sub validate_github_repo {
 	my $errors = [];
 	unless(length($github_repo_string) == 0) {
 		my $u = URI->new($github_repo_string);
-		use DDP; p $u;
 		my $path_segments = defined $u ? [$u->path_segments()] : [];
 		(defined $u
 			and $u->scheme and $u->scheme =~ 'https?'

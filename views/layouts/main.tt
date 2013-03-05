@@ -3,7 +3,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=<% settings.charset %>" />
+<% IF page_title %>
+<title>autobahn &mdash; <% page_title | html %></title>
+<% ELSE %>
 <title>autobahn</title>
+<% END %>
 <link rel="stylesheet" href="<% request.uri_base %>/css/style.css" />
 
 <!-- Grab Google CDN's jQuery. fall back to local if necessary -->
