@@ -1,2 +1,3 @@
 #!/bin/sh
+export PLACK_ENV="production"
 plackup --port 8585 ./bin/app.pl

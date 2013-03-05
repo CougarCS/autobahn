@@ -4,8 +4,7 @@
           <h2>Wir fahr&rsquo;n farhr&rsquo;n farhr&rsquo;n &hellip;</h2>
 
         </div>
-	<!-- TODO -->
-	<h2>Under construction&hellip;</h2>
+	<h2>It's a grand opening!!!</h2>
 	<% IF events %>
 	<h2>News feed</h2>
 	<div id="feed">
