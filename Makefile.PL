@@ -24,6 +24,7 @@ WriteMakefile(
 	'List::AllUtils' => 0,
 	'Plack' => 0,
 	'URI::Encode' => 0,
+	'Template' => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'autobahn-*' },
