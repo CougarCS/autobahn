@@ -25,6 +25,8 @@ WriteMakefile(
 	'Plack' => 0,
 	'URI::Encode' => 0,
 	'Template' => 0,
+	'Dancer::Middleware::Rebase' => 0,
+	'LWP::Protocol::https' => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'autobahn-*' },
