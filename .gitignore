@@ -5,3 +5,4 @@ production.db
 MYMETA.json
 MYMETA.yml
 Makefile
+.vagrant
