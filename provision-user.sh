@@ -10,6 +10,7 @@ if ! which perlbrew > /dev/null 2>&1; then
 fi
 source ~/perl5/perlbrew/etc/bashrc
 perlbrew install -v perl-5.14.4
+perlbrew switch perl-5.14.4
 if ! which cpanm > /dev/null 2>&1; then
 	perlbrew install-cpanm
 fi
