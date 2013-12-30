@@ -134,13 +134,6 @@ sub check_project_permission {
 		send_error("You do not have permission for this action.", 401);
 	}
 }
-sub clean_skills_formdata {
-	my ($skills_string) = @_;
-	return [ map { $_ =~ s/^\s+|\s+$//gr } # trim
-		map { lc } # lowercase
-		grep { $_ !~ m,/, } # no /'s in skill
-		split(/,/, $skills_string) ];
-}
 sub params_project_edit {#{{{
 	my ($params) = @_;
 	my $projectuid = params('route')->{projectid};

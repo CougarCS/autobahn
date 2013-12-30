@@ -30,6 +30,7 @@ USERSKILLSTATE_HAVE USERSKILLSTATE_WANT
     profile_to_form
     skills_to_form
     project_to_form
+    clean_skills_formdata
     validate_skill_data
     validate_description
     validate_project_title
@@ -280,6 +281,13 @@ sub project_to_form {
 use constant MAX_LENGTH_SKILL => 30;
 use constant MAX_LENGTH_DESCRIPTION => 1000;
 use constant MAX_LENGTH_TITLE => 80;
+sub clean_skills_formdata {
+	my ($skills_string) = @_;
+	return [ map { $_ =~ s/^\s+|\s+$//gr } # trim
+		map { lc } # lowercase
+		grep { $_ !~ m,/, } # no /'s in skill
+		split(/,/, $skills_string) ];
+}
 sub validate_skill_data {
 	my ($skill_string) = @_;
 	# skills can be empty list,
