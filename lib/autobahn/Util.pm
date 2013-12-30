@@ -53,6 +53,8 @@ use List::AllUtils qw/first/;
 #use Text::Markdown 'markdown';
 #use HTML::Restrict;
 
+use autobahn::Helper;
+
 use constant USERSKILLSTATE_HAVE => 1;
 use constant USERSKILLSTATE_WANT => 2;
 
@@ -240,11 +242,9 @@ sub skill_map {#{{{
 }#}}}
 sub profile_map {#{{{
 	map { { name => $_->fullname,
-		url => uri_for('/profile/').encode_entities($_->name),
+		url => $_->get_profile_url,
 		nick => $_->name,
-		avatarurl => # TODO only if it exists, otherwise use a default
-			schema->resultset('Useravatar')
-				->find({ userid => $_->userid })->avatarurl || 'test',
+		avatarurl => $_->get_avatar,
 	} } @_
 }#}}}
 sub project_map {

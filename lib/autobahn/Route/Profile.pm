@@ -4,7 +4,7 @@ use Dancer ':syntax';
 use Dancer::Plugin::DBIC qw(schema resultset rset);
 use autobahn::Util;
 use HTML::Entities;
-
+use autobahn::Helper;
 
 # Profile {{{
 get '/profile/:username' => sub {#{{{
@@ -25,12 +25,9 @@ get '/profile/:username' => sub {#{{{
 	template 'profile', {
 		page_title => 'Profile: '.$profile->fullname,
 		name => $profile->fullname,
-		profile_avatar =>
-					schema->resultset('Useravatar')
-						->find({ userid => $profile->userid })->avatarurl,
+		profile_avatar => $profile->get_avatar,
 		description => $profile->description,
-		github_url => 'http://github.com/'.encode_entities($profile->name),
-			# TODO refactor to a function that looks up github login
+		github_url => $profile->get_github_url,
 		projects => {
 			started => [ project_map( @projects_started ) ],
 			interested => [ project_map( map { $_->projectid } @projects_interest ) ],
@@ -40,7 +37,7 @@ get '/profile/:username' => sub {#{{{
 			want => [skill_map(map { $_->skillid } $skills_want_rs->all)],
 		},
 		logged_in_user_profile => get_logged_in_username() eq params('route')->{'username'},
-		profile_edit_url => request->path . '/edit',
+		profile_edit_url => uri_for(request->path . '/edit'),
 	};
 };
 #}}}
