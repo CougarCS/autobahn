@@ -17,12 +17,8 @@ get '/profile/:username' => sub {#{{{
 		->search({ creator => $profile->userid }, { order_by => 'title' });
 	my $projects_interest_rs = schema->resultset('Userprojectinterest')
 		->search({ userid => $profile->userid }, { prefetch => 'projectid', order_by => 'projectid.title' });
-	my $skills_have_rs = schema->resultset('Userskill')
-		->search({ userid => $profile->userid, skillstate => USERSKILLSTATE_HAVE },
-		{ prefetch => 'skillid', order_by => 'skillid.name' });
-	my $skills_want_rs = schema->resultset('Userskill')
-		->search({ userid => $profile->userid, skillstate => USERSKILLSTATE_WANT },
-		{ prefetch => 'skillid', order_by => 'skillid.name' });
+	my $skills_have_rs = get_skills_have_for_profile($profile);
+	my $skills_want_rs = get_skills_wanted_for_profile($profile);
 	template 'profile', {
 		page_title => 'Profile: '.$profile->fullname,
 		name => $profile->fullname,

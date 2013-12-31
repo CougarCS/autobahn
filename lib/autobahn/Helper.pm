@@ -5,7 +5,10 @@ use parent qw( Exporter );
 USERSKILLSTATE_HAVE USERSKILLSTATE_WANT
 
 get_all_skills_wanted get_all_skills_have get_all_project_skills_have
+get_skills_wanted_for_profile get_skills_have_for_profile
+get_skills_for_project
 get_skill_by_name
+
 
 get_all_projects
 
@@ -46,6 +49,24 @@ sub get_skill_by_name {
 	return $skill if($skill);
 	return schema->resultset('Skill')->create({ name => $skillname, description => '' }) if $create;
 	undef;
+}
+sub get_skills_wanted_for_profile {
+	my ($profile) = @_;
+	schema->resultset('Userskill')
+		->search({ userid => $profile->userid, skillstate => USERSKILLSTATE_WANT },
+			{ prefetch => 'skillid', order_by => 'skillid.name'  });
+}
+sub get_skills_have_for_profile {
+	my ($profile) = @_;
+	schema->resultset('Userskill')
+		->search({ userid => $profile->userid, skillstate => USERSKILLSTATE_HAVE },
+			{ prefetch => 'skillid', order_by => 'skillid.name'  });
+}
+sub get_skills_for_project {
+	my ($project) = @_;
+	schema->resultset('Projectskill')
+		->search({ projectid => $project->projectid },
+			{ prefetch => 'skillid', order_by => 'skillid.name'  });
 }
 #}}}
 # Project {{{
@@ -116,8 +137,7 @@ use autobahn::Schema::Result::Project;
 sub autobahn::Schema::Result::Project::get_project_with_skills_hash {
 	my ($self) = @_;
 	my $data = $self->get_project_hash;
-	my $projectskills_rs = schema->resultset('Projectskill')
-		->search({ projectid => $self->projectid });
+	my $projectskills_rs = get_skills_for_project($self);
 	$data->{skills} = $projectskills_rs->related_resultset('skillid')->get_skill_map;
 	$data;
 }

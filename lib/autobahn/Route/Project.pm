@@ -15,8 +15,7 @@ get '/project/:projectid' => sub {#{{{
 	unless($project) {
 		send_error("Invalid project", 401);
 	}
-	my $projectskills_rs = schema->resultset('Projectskill')
-		->search({ projectid => $project->projectid });
+	my $projectskills_rs = get_skills_for_project($project);
 	my $others_interested_rs = schema->resultset('Userprojectinterest')
 		->search({ projectid => $project->projectid });
 	template 'project', {
