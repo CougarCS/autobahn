@@ -20,6 +20,7 @@ use HTML::Entities;
 use List::AllUtils qw/first/;
 #use Text::Markdown 'markdown';
 #use HTML::Restrict;
+use Unicode::CaseFold; # because fc is not in Perl < 5.016
 
 use autobahn::Helper;
 
@@ -66,17 +67,15 @@ sub formfill_template {
 sub profile_to_form {
 	my ($profile_row) = @_;
 	my $profileid = $profile_row->userid;
-	my $skills_have_rs = schema->resultset('Userskill')
-		->search({ userid => $profileid, skillstate => USERSKILLSTATE_HAVE } );
-	my $skills_want_rs = schema->resultset('Userskill')
-		->search({ userid => $profileid, skillstate => USERSKILLSTATE_WANT } );
+	my $skills_have_rs = get_skills_have_for_profile($profile_row);
+	my $skills_want_rs = get_skills_wanted_for_profile($profile_row);
 	
 	{ description => $profile_row->description,
 		'skills-acquired' => skills_to_form( map { $_->skillid } $skills_have_rs->all ),
 		'skills-tolearn' => skills_to_form( map { $_->skillid } $skills_want_rs->all ), };
 }
 sub skills_to_form {
-	join ",", map { $_->name } @_;
+	join ",", sort { fc $a cmp fc $b } map { $_->name } @_;
 }
 sub project_to_form {
 	my ($project_row) = @_;
