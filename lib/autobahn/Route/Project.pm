@@ -29,7 +29,7 @@ get '/project/:projectid' => sub {#{{{
 			project_creator_logged_in => is_project_owner_logged_in_by_uid($projectuid),
 			project_interest_url => request->path . '/interest',
 			has_interest => has_interest(session('logged_in_userid'), $project->projectid),
-			creator_profile_url => uri_for('/profile/'. $project->creator->name),
+			creator_profile_url => $project->creator->get_profile_url,
 			creator_profile_nick => $project->creator->name,
 			creator_profile_name => $project->creator->fullname,
 			others_interested => $others_interested_rs->related_resultset('userid')->get_profile_map,
@@ -46,7 +46,6 @@ post '/project' => sub {#{{{
 	redirect '/project/'.$uuid.'/edit';
 };#}}}
 get '/project/:projectid/edit' => sub {#{{{
-	# TODO add a delete button
 	check_logged_in();
 	check_project_permission();
 	my $projectuid = params('route')->{projectid};
@@ -78,7 +77,6 @@ post '/project/:projectid/edit' => sub {#{{{
 		params_project_edit($v_data->{new_params});
 		redirect '/project/'.$uuid;
 	} elsif( exists $params{'delete-project'} ) {
-		check_logged_in();
 		delete_project_by_uid($uuid);
 		set_flash('Deleted project');
 		redirect session('logged_in_profile_url');
@@ -122,8 +120,8 @@ sub is_project_owner_logged_in_by_uid {
 	my ($projectuid) = @_;
 	my $project = schema->resultset('Project')->find({ projectuid => $projectuid });
 	return 0 unless $project;
-	my $project_creator_name = $project->creator->name;
-	return get_logged_in_username() eq $project_creator_name;
+	my $project_creator_id = $project->creator->userid;
+	return get_logged_in_userid() eq $project_creator_id;
 }
 sub is_projectuid_in_session {
 	my ($projectuid) = @_;
@@ -191,14 +189,6 @@ sub delete_project_by_uid {#{{{
 	my $project = schema->resultset('Project')
 		->find({ projectid => $projectid });
 	$project->delete;
-}#}}}
-sub check_project_edit {#{{{
-	my ($project) = @_;
-	if ( not session('logged_in') ) { # can't edit if not logged in
-		send_error("Not logged in", 401);
-	}
-	# TODO error if not owner
-
 }#}}}
 #}}}
 
