@@ -2,9 +2,10 @@ package autobahn::Route::Profile;
 
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC qw(schema resultset rset);
+
 use autobahn::Util;
-use HTML::Entities;
 use autobahn::Helper;
+use autobahn::Session;
 
 # Profile {{{
 get '/profile/:username' => sub {#{{{

@@ -3,6 +3,14 @@ package autobahn::Helper;
 use parent qw( Exporter );
 @EXPORT = qw(
 USERSKILLSTATE_HAVE USERSKILLSTATE_WANT
+
+get_all_skills_wanted get_all_skills_have get_all_project_skills_have
+get_skill_by_name
+
+get_all_projects
+
+
+get_projectid_by_uid get_profile_by_username get_project_by_uid
 );
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC qw(schema resultset rset);
@@ -11,6 +19,56 @@ use HTML::Entities;
 use constant USERSKILLSTATE_HAVE => 1;
 use constant USERSKILLSTATE_WANT => 2;
 
+#### Search helpers
+# Profile {{{
+sub get_profile_by_username {
+	my ($username) = @_;
+	schema->resultset('Profile')
+		->find({ name => $username });
+}
+#}}}
+# Skills {{{
+sub get_all_skills_wanted {
+	schema->resultset('Userskill')->search({ skillstate => USERSKILLSTATE_WANT },
+		{ prefetch => 'skillid', group_by => [qw/me.skillid/], order_by => 'skillid.name'  });
+}
+sub get_all_skills_have {
+	schema->resultset('Userskill')->search({ skillstate => USERSKILLSTATE_HAVE },
+		{ prefetch => 'skillid', group_by => [qw/me.skillid/], order_by => 'skillid.name' });
+}
+sub get_all_project_skills_have {
+	schema->resultset('Projectskill')->search({},
+		{ prefetch => 'skillid', group_by => [qw/me.skillid/], order_by => 'skillid.name'  });
+}
+sub get_skill_by_name {
+	my ($skillname, $create) = @_;
+	my $skill = schema->resultset('Skill')->find({ name => $skillname });
+	return $skill if($skill);
+	return schema->resultset('Skill')->create({ name => $skillname, description => '' }) if $create;
+	undef;
+}
+#}}}
+# Project {{{
+sub get_all_projects {
+	schema->resultset('Project')
+		->search({}, { order_by => 'title' })
+}
+sub get_projectid_by_uid {
+	my ($uid) = @_;
+	my $project = get_project_by_uid($uid);
+	if($project) {
+		return $project->projectid;
+	}
+	return undef;
+}
+sub get_project_by_uid {
+	my ($uid) = @_;
+	schema->resultset('Project')
+		->find({ projectuid => $uid });
+}
+#}}}
+
+#### Result class helpers
 # Profile {{{
 use autobahn::Schema::Result::Profile;
 

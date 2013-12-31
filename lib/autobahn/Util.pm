@@ -2,47 +2,18 @@ package autobahn::Util;
 
 use parent qw( Exporter );
 @EXPORT = qw(
-    check_account
-    edit_profile_skills
-    get_profile_skills
-    get_all_skills
-    edit_project_skills
-    get_project_skills
-    get_projectid_by_uid
-    get_project_by_uid
-    check_project
-    create_project
-    edit_project
-    get_profile_by_username
-    get_skill_by_name
-    set_flash
-    get_flash
-    uuid_str
-    check_logged_in
-    get_logged_in_userid
-    get_logged_in_username
-    formfill_template
-    profile_to_form
-    skills_to_form
-    project_to_form
-    clean_skills_formdata
-    validate_skill_data
-    validate_description
-    validate_project_title
-    validate_github_repo
-    validate_project_form
-    validate_profile_form
-    is_printable
+    set_flash get_flash
 
-    get_all_skills_wanted
-    get_all_skills_have
-    get_all_projects
+    formfill_template profile_to_form skills_to_form
+    project_to_form clean_skills_formdata
+    validate_skill_data validate_description
+    validate_project_title validate_github_repo validate_project_form
+    validate_profile_form is_printable
 );
 
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Github;
 use Dancer::Plugin::DBIC qw(schema resultset rset);
-use Data::UUID;
 use HTML::FillInForm;
 use URI::Encode qw(uri_encode uri_decode);
 use HTML::Entities;
@@ -52,103 +23,6 @@ use List::AllUtils qw/first/;
 
 use autobahn::Helper;
 
-our $uuid_gen = Data::UUID->new;
-
-# Database actions {{{
-# Create/update account on login {{{
-# create account if doesn't exist
-# update account otherwise
-#
-# Table actions:
-# Profile (create/update)
-# Useravatar (create/update)
-# Userlogin (create)
-sub check_account {
-	my $login = session('github_user')->{'login'};
-	my $name = session('github_user')->{'name'} || $login;
-	my $avatar_url = session('github_user')->{'avatar_url'} // '';
-	my $userlogin = schema->resultset('Userlogin')
-		->find({ githubuser => $login });
-	my $profile;
-	my $userid;
-	unless($userlogin) {
-		# new
-		$profile = schema->resultset('Profile')->new({
-			name => $login, # user github profile name as profile name
-			fullname => $name,
-			description => '',
-			jointime => time, # now
-			lastloggedin => time,
-		});
-		$profile = $profile->insert;
-		$userid = $profile->userid;
-		$userlogin = schema->resultset('Userlogin')
-			->new({ userid => $profile->userid, githubuser => $login });
-		$userlogin->insert;
-		session "new_account" => 1;
-	} else {
-		# update
-		$userid = $userlogin->userid->userid;
-		$profile = schema->resultset('Profile')->update_or_create( {
-			userid => $userid,
-			fullname => $name,
-			lastloggedin => time, # now
-		}, { key => 'primary' });
-	}
-	session logged_in_userid => $userid;
-	session logged_in_username => $profile->name;
-	session logged_in_profile_url => uri_for('/profile/'.encode_entities($profile->name));
-	schema->resultset('Useravatar')->update_or_create({
-		userid => $userid,
-		avatarurl => $avatar_url,
-	}, { key => 'primary' });
-}
-#}}}
-# Skills {{{
-sub get_all_skills_wanted {
-	schema->resultset('Userskill')->search({ skillstate => USERSKILLSTATE_WANT },
-		{ prefetch => 'skillid', group_by => [qw/me.skillid/], order_by => 'skillid.name'  });
-}
-sub get_all_skills_have {
-	schema->resultset('Userskill')->search({ skillstate => USERSKILLSTATE_HAVE },
-		{ prefetch => 'skillid', group_by => [qw/me.skillid/], order_by => 'skillid.name' });
-}
-sub get_all_project_skills_have {
-	schema->resultset('Projectskill')->search({},
-		{ prefetch => 'skillid', group_by => [qw/me.skillid/], order_by => 'skillid.name'  });
-}
-#}}}
-# Project {{{
-sub get_all_projects {
-	schema->resultset('Project')
-		->search({}, { order_by => 'title' })
-}
-sub get_projectid_by_uid {#{{{
-	my ($uid) = @_;
-	my $project = get_project_by_uid($uid);
-	if($project) {
-		return $project->projectid;
-	}
-	return undef;
-}#}}}
-sub get_project_by_uid {#{{{
-	my ($uid) = @_;
-	schema->resultset('Project')
-		->find({ projectuid => $uid });
-}#}}}
-#}}}
-sub get_profile_by_username {#{{{
-	my ($username) = @_;
-	schema->resultset('Profile')
-		->find({ name => $username });
-}#}}}
-sub get_skill_by_name {#{{{
-	my ($skillname, $create) = @_;
-	my $skill = schema->resultset('Skill')->find({ name => $skillname });
-	return $skill if($skill);
-	return schema->resultset('Skill')->create({ name => $skillname, description => '' }) if $create;
-	undef;
-}#}}}
 #}}}
 # Flash message {{{
 sub set_flash {
@@ -160,22 +34,6 @@ sub get_flash {
 	session flash => "";
 	return $msg;
 }
-#}}}
-# Session utils {{{
-sub uuid_str {#{{{
-	$uuid_gen->create_str =~ s/-//gr =~ tr/A-Z/a-z/r;
-}#}}}
-sub check_logged_in {#{{{
-	if ( not session('logged_in') ) {
-		send_error("Not logged in", 401);
-	}
-}#}}}
-sub get_logged_in_userid {#{{{
-	return session('logged_in_userid') // '';
-}#}}}
-sub get_logged_in_username {#{{{
-	return session('logged_in_username') // '';
-}#}}}
 #}}}
 # Template utils {{{
 hook 'before_template_render' => sub {#{{{

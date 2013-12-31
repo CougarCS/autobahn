@@ -2,8 +2,10 @@ package autobahn::Route::Project;
 
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC qw(schema resultset rset);
+
 use autobahn::Util;
 use autobahn::Helper;
+use autobahn::Session;
 
 
 # Project {{{

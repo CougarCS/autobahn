@@ -2,8 +2,10 @@ package autobahn::Route::Toplevel;
 
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC qw(schema resultset rset);
+
 use autobahn::Util;
 use autobahn::Helper;
+use autobahn::Session;
 
 # List of everything (home,profiles,projects,skills) routes {{{
 #by default success will redirect to this route
@@ -39,7 +41,7 @@ get '/profiles' => sub {#{{{
 get '/skills' => sub {#{{{
 	my $skills_want_rs = get_all_skills_wanted;
 	my $skills_have_rs = get_all_skills_have;
-	my $skills_project_rs = get_all_skills_have;
+	my $skills_project_rs = get_all_project_skills_have;
 	template 'skills', {
 		page_title => 'Skills',
 		on_skills => 1,

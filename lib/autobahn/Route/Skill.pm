@@ -2,9 +2,10 @@ package autobahn::Route::Skill;
 
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC qw(schema resultset rset);
+
 use autobahn::Util;
 use autobahn::Helper;
-
+use autobahn::Session;
 
 # Skill {{{
 get '/skill/:skillname' => sub {#{{{
