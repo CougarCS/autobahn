@@ -3,7 +3,9 @@
 			<li class="project">
 				<a class="project-name" href="<% project.url %>"><% project.name | html %></a>
 				<p><% project.description | html %></p>
+				<% IF project.skills and project.skills.size %>
 				<% INCLUDE skilllist.tt skills=project.skills %>
+				<% END %>
 			</li>
 		<% END %>
 		</ul>
