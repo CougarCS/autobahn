@@ -1,5 +1,9 @@
 		<ul class="project-list">
 		<% FOREACH project IN projects %>
-			<li><a href="<% project.url %>"><% project.name | html %></a></li>
+			<li class="project">
+				<a class="project-name" href="<% project.url %>"><% project.name | html %></a>
+				<p><% project.description | html %></p>
+				<% INCLUDE skilllist.tt skills=project.skills %>
+			</li>
 		<% END %>
 		</ul>

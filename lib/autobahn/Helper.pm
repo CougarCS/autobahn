@@ -113,9 +113,18 @@ sub autobahn::Schema::Result::Skill::get_skill_url {
 # Project {{{
 use autobahn::Schema::Result::Project;
 
+sub autobahn::Schema::Result::Project::get_project_with_skills_hash {
+	my ($self) = @_;
+	my $data = $self->get_project_hash;
+	my $projectskills_rs = schema->resultset('Projectskill')
+		->search({ projectid => $self->projectid });
+	$data->{skills} = $projectskills_rs->related_resultset('skillid')->get_skill_map;
+	$data;
+}
+
 sub autobahn::Schema::Result::Project::get_project_hash {
 	my ($self) = @_;
-	+{ name => $self->title, url => $self->get_project_url };
+	+{ name => $self->title, url => $self->get_project_url, description => $self->description };
 }
 
 sub autobahn::Schema::Result::Project::get_project_url {

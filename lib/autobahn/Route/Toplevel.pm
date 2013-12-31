@@ -8,7 +8,7 @@ use autobahn::Helper;
 use autobahn::Session;
 
 # List of everything (home,profiles,projects,skills) routes {{{
-#by default success will redirect to this route
+# by default success will redirect to this route
 get '/' => sub {#{{{
 	template 'index', {
 		page_title => 'Welcome!',
@@ -26,7 +26,7 @@ get '/projects' => sub {#{{{
 	template 'projects', {
 		page_title => 'Projects',
 		on_projects => 1,
-		projects => $projects_rs->get_project_map,
+		projects => $projects_rs->get_project_with_skills_map,
 	}
 };#}}}
 get '/profiles' => sub {#{{{

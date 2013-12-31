@@ -65,6 +65,31 @@
 	background: url(../images/email.png) left center no-repeat;
 }
 
+.project-list {
+	list-style-type: none;
+}
+
+.project-list .project {
+	margin-bottom: 25px;
+	border: 1px solid;
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	padding: 5px;
+	text-decoration:none;
+	margin-right: 5px;
+	margin-bottom:5px;
+	font-family: helvetica;
+	font-size:13px;
+}
+
+.project-list .project-name {
+	/*float: left;*/
+	margin-bottom: 1;
+}
+.project-list .skill-list {
+	/*float: right;*/
+}
+
 body {
 	margin: 0;
 	margin-bottom: 25px;
