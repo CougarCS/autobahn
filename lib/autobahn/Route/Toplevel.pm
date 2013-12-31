@@ -3,6 +3,7 @@ package autobahn::Route::Toplevel;
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC qw(schema resultset rset);
 use autobahn::Util;
+use autobahn::Helper;
 
 # List of everything (home,profiles,projects,skills) routes {{{
 #by default success will redirect to this route
@@ -19,36 +20,32 @@ get '/' => sub {#{{{
 	};
 };#}}}
 get '/projects' => sub {#{{{
-	my @projects = schema->resultset('Project')
-		->search({}, { order_by => 'title' })->all;
+	my $projects_rs = get_all_projects();
 	template 'projects', {
 		page_title => 'Projects',
 		on_projects => 1,
-		projects => [ project_map( @projects ) ]
+		projects => $projects_rs->get_project_map,
 	}
 };#}}}
 get '/profiles' => sub {#{{{
-	my @profiles = schema->resultset('Profile')
-		->search({}, { order_by => 'fullname' })->all;
+	my $profiles_rs = schema->resultset('Profile')
+		->search({}, { order_by => 'fullname' });
 	template 'profiles', {
 		page_title => 'Profiles',
 		on_profiles => 1,
-		profiles => [ profile_map(@profiles) ]
+		profiles => $profiles_rs->get_profile_map,
 	}
 };#}}}
 get '/skills' => sub {#{{{
-	my $skills_want_rs = schema->resultset('Userskill')->search({ skillstate => USERSKILLSTATE_WANT },
-		{ prefetch => 'skillid', group_by => [qw/me.skillid/], order_by => 'skillid.name'  });
-	my $skills_have_rs = schema->resultset('Userskill')->search({ skillstate => USERSKILLSTATE_HAVE },
-		{ prefetch => 'skillid', group_by => [qw/me.skillid/], order_by => 'skillid.name' });
-	my $skills_project_rs = schema->resultset('Projectskill')->search({},
-		{ prefetch => 'skillid', group_by => [qw/me.skillid/], order_by => 'skillid.name'  });
+	my $skills_want_rs = get_all_skills_wanted;
+	my $skills_have_rs = get_all_skills_have;
+	my $skills_project_rs = get_all_skills_have;
 	template 'skills', {
 		page_title => 'Skills',
 		on_skills => 1,
-		skills_have => [ skill_map(map { $_->skillid } $skills_have_rs->all) ],
-		skills_want => [ skill_map(map { $_->skillid } $skills_want_rs->all) ],
-		skills_project => [ skill_map(map { $_->skillid } $skills_project_rs->all) ],
+		skills_have => $skills_have_rs->related_resultset('skillid')->get_skill_map,
+		skills_want => $skills_want_rs->related_resultset('skillid')->get_skill_map,
+		skills_project => $skills_project_rs->related_resultset('skillid')->get_skill_map,
 	}
 };#}}}
 #}}}

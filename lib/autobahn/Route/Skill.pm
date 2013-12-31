@@ -3,6 +3,7 @@ package autobahn::Route::Skill;
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC qw(schema resultset rset);
 use autobahn::Util;
+use autobahn::Helper;
 
 
 # Skill {{{
@@ -20,10 +21,10 @@ get '/skill/:skillname' => sub {#{{{
 			page_title => 'Skill: '.$skill->name,
 			name => $skill->name,
 			profiles => {
-				have => [ profile_map( map { $_->userid } $skill_have_rs->all ) ],
-				want => [ profile_map( map { $_->userid } $skill_want_rs->all ) ]
+				have => $skill_have_rs->related_resultset('userid')->get_profile_map,
+				want => $skill_want_rs->related_resultset('userid')->get_profile_map,
 			},
-			projects => [ project_map( map { $_->projectid } $projects_rs->all) ],
+			projects => $projects_rs->related_resultset('projectid')->get_project_map,
 	};
 };
 #}}}

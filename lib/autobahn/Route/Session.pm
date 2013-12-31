@@ -3,6 +3,7 @@ package autobahn::Routes::Session;
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Github;
 use autobahn::Util;
+use autobahn::Helper;
 
 # Account {{{
 get '/logout' => sub {

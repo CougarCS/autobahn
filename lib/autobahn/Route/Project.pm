@@ -3,6 +3,7 @@ package autobahn::Route::Project;
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC qw(schema resultset rset);
 use autobahn::Util;
+use autobahn::Helper;
 
 
 # Project {{{
@@ -14,14 +15,14 @@ get '/project/:projectid' => sub {#{{{
 	}
 	my $projectskills_rs = schema->resultset('Projectskill')
 		->search({ projectid => $project->projectid });
-	my @others_interested = map { $_->userid } schema->resultset('Userprojectinterest')
-		->search({ projectid => $project->projectid })->all;
+	my $others_interested_rs = schema->resultset('Userprojectinterest')
+		->search({ projectid => $project->projectid });
 	template 'project', {
 			page_title => 'Project: '.$project->title,
 			name => $project->title,
 			github_repo => $project->githubrepo,
 			description => $project->description,
-			skills => [ skill_map(map { $_->skillid } $projectskills_rs->all) ],
+			skills => $projectskills_rs->related_resultset('skillid')->get_skill_map,
 			project_edit_url => request->path . '/edit',
 			project_creator_logged_in => is_project_owner_logged_in_by_uid($projectuid),
 			project_interest_url => request->path . '/interest',
@@ -29,7 +30,7 @@ get '/project/:projectid' => sub {#{{{
 			creator_profile_url => uri_for('/profile/'. $project->creator->name),
 			creator_profile_nick => $project->creator->name,
 			creator_profile_name => $project->creator->fullname,
-			others_interested => [ profile_map(@others_interested) ]
+			others_interested => $others_interested_rs->related_resultset('userid')->get_profile_map,
 	};
 };
 #}}}

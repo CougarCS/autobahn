@@ -2,8 +2,6 @@ package autobahn::Util;
 
 use parent qw( Exporter );
 @EXPORT = qw(
-USERSKILLSTATE_HAVE USERSKILLSTATE_WANT
-
     check_account
     edit_profile_skills
     get_profile_skills
@@ -24,9 +22,6 @@ USERSKILLSTATE_HAVE USERSKILLSTATE_WANT
     get_logged_in_userid
     get_logged_in_username
     formfill_template
-    skill_map
-    profile_map
-    project_map
     profile_to_form
     skills_to_form
     project_to_form
@@ -39,7 +34,9 @@ USERSKILLSTATE_HAVE USERSKILLSTATE_WANT
     validate_profile_form
     is_printable
 
-
+    get_all_skills_wanted
+    get_all_skills_have
+    get_all_projects
 );
 
 use Dancer ':syntax';
@@ -54,9 +51,6 @@ use List::AllUtils qw/first/;
 #use HTML::Restrict;
 
 use autobahn::Helper;
-
-use constant USERSKILLSTATE_HAVE => 1;
-use constant USERSKILLSTATE_WANT => 2;
 
 our $uuid_gen = Data::UUID->new;
 
@@ -111,34 +105,24 @@ sub check_account {
 }
 #}}}
 # Skills {{{
-# Edit skills on a profile {{{
-sub edit_profile_skills {
-	# TODO
+sub get_all_skills_wanted {
+	schema->resultset('Userskill')->search({ skillstate => USERSKILLSTATE_WANT },
+		{ prefetch => 'skillid', group_by => [qw/me.skillid/], order_by => 'skillid.name'  });
 }
-#}}}
-# Get skills on a profile {{{
-sub get_profile_skills {
-	# TODO
+sub get_all_skills_have {
+	schema->resultset('Userskill')->search({ skillstate => USERSKILLSTATE_HAVE },
+		{ prefetch => 'skillid', group_by => [qw/me.skillid/], order_by => 'skillid.name' });
 }
-#}}}
-# Get all skills {{{
-sub get_all_skills {
-	# TODO
+sub get_all_project_skills_have {
+	schema->resultset('Projectskill')->search({},
+		{ prefetch => 'skillid', group_by => [qw/me.skillid/], order_by => 'skillid.name'  });
 }
-#}}}
-# Edit project skills {{{
-sub edit_project_skills {
-	# TODO
-}
-#}}}
-# Get project skills {{{
-sub get_project_skills {
-	# TODO
-}
-#}}}
 #}}}
 # Project {{{
-
+sub get_all_projects {
+	schema->resultset('Project')
+		->search({}, { order_by => 'title' })
+}
 sub get_projectid_by_uid {#{{{
 	my ($uid) = @_;
 	my $project = get_project_by_uid($uid);
@@ -152,27 +136,12 @@ sub get_project_by_uid {#{{{
 	schema->resultset('Project')
 		->find({ projectuid => $uid });
 }#}}}
-# Check project {{{
-sub check_project {
-	# TODO
-}
 #}}}
-# Create project {{{
-sub create_project {
-	# TODO
-}
-#}}}
-# Edit project {{{
-sub edit_project {
-
-}
-#}}}
-#}}}
-sub get_profile_by_username {
+sub get_profile_by_username {#{{{
 	my ($username) = @_;
 	schema->resultset('Profile')
 		->find({ name => $username });
-}
+}#}}}
 sub get_skill_by_name {#{{{
 	my ($skillname, $create) = @_;
 	my $skill = schema->resultset('Skill')->find({ name => $skillname });
@@ -235,21 +204,6 @@ sub formfill_template {
 	my ($template_name, $template_data, $formdata) = @_;
 	my $template_html = template $template_name, $template_data;
 	return HTML::FillInForm->fill( \$template_html , $formdata );
-}
-sub skill_map {#{{{
-	map { { name => $_->name,
-		url => uri_for("/skill/").encode_entities($_->name) } } @_;
-}#}}}
-sub profile_map {#{{{
-	map { { name => $_->fullname,
-		url => $_->get_profile_url,
-		nick => $_->name,
-		avatarurl => $_->get_avatar,
-	} } @_
-}#}}}
-sub project_map {
-	map { { name => $_->title,
-		url => uri_for('/project/').encode_entities($_->projectuid) } } @_
 }
 sub profile_to_form {
 	my ($profile_row) = @_;

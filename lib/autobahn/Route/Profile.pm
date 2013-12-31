@@ -12,10 +12,10 @@ get '/profile/:username' => sub {#{{{
 	unless($profile) {
 		send_error("User does not exist", 401);
 	}
-	my @projects_started = schema->resultset('Project')
-		->search({ creator => $profile->userid }, { order_by => 'title' })->all;
-	my @projects_interest = schema->resultset('Userprojectinterest')
-		->search({ userid => $profile->userid }, { prefetch => 'projectid', order_by => 'projectid.title' })->all;
+	my $projects_started_rs = schema->resultset('Project')
+		->search({ creator => $profile->userid }, { order_by => 'title' });
+	my $projects_interest_rs = schema->resultset('Userprojectinterest')
+		->search({ userid => $profile->userid }, { prefetch => 'projectid', order_by => 'projectid.title' });
 	my $skills_have_rs = schema->resultset('Userskill')
 		->search({ userid => $profile->userid, skillstate => USERSKILLSTATE_HAVE },
 		{ prefetch => 'skillid', order_by => 'skillid.name' });
@@ -29,12 +29,12 @@ get '/profile/:username' => sub {#{{{
 		description => $profile->description,
 		github_url => $profile->get_github_url,
 		projects => {
-			started => [ project_map( @projects_started ) ],
-			interested => [ project_map( map { $_->projectid } @projects_interest ) ],
+			started => $projects_started_rs->get_project_map,
+			interested => $projects_interest_rs->related_resultset('projectid')->get_project_map,
 		},
 		skills => {
-			have => [skill_map(map { $_->skillid } $skills_have_rs->all)],
-			want => [skill_map(map { $_->skillid } $skills_want_rs->all)],
+			have => $skills_have_rs->related_resultset('skillid')->get_skill_map,
+			want => $skills_want_rs->related_resultset('skillid')->get_skill_map,
 		},
 		logged_in_user_profile => get_logged_in_username() eq params('route')->{'username'},
 		profile_edit_url => uri_for(request->path . '/edit'),
