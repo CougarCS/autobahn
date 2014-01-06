@@ -142,8 +142,7 @@ sub params_project_edit {#{{{
 	my $description = $params->{description};
 	my $skills = clean_skills_formdata($params->{"skills"});
 
-	my $project = schema->resultset('Project')
-		->find({ projectuid => $projectuid  });
+	my $project = get_project_by_uid($projectuid);
 	my $projectid;
 	unless($project) {
 		# new
