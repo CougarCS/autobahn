@@ -24,7 +24,6 @@ use Unicode::CaseFold; # because fc is not in Perl < 5.016
 
 use autobahn::Helper;
 
-#}}}
 # Flash message {{{
 sub set_flash {
 	my $message = shift;

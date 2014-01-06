@@ -48,7 +48,7 @@ get '/project/:projectid/edit' => sub {#{{{
 	check_logged_in();
 	check_project_permission();
 	my $projectuid = params('route')->{projectid};
-	my $project = schema->resultset('Project')->find({ projectuid => $projectuid });
+	my $project = get_project_by_uid($projectuid);
 	unless($project or is_projectuid_in_session($projectuid)) {
 		send_error("Project does not exist", 401);
 	}
@@ -84,7 +84,7 @@ post '/project/:projectid/edit' => sub {#{{{
 post '/project/:projectid/interest' => sub {#{{{
 	check_logged_in();
 	my $projectuid = params('route')->{'projectid'};
-	my $project = schema->resultset('Project')->find({ projectuid => $projectuid });
+	my $project = get_project_by_uid($projectuid);
 	unless($project) {
 		send_error("Invalid project", 401);
 	}
@@ -103,7 +103,7 @@ sub has_interest {
 }
 sub params_project_interest_toggle {
 	my $projectuid = params('route')->{'projectid'};
-	my $project = schema->resultset('Project')->find({ projectuid => $projectuid });
+	my $project = get_project_by_uid($projectuid);
 	my $projectid = $project->projectid;
 	my $userid = session('logged_in_userid');
 	my $user_interest_row = schema->resultset('Userprojectinterest')
@@ -117,7 +117,7 @@ sub params_project_interest_toggle {
 
 sub is_project_owner_logged_in_by_uid {
 	my ($projectuid) = @_;
-	my $project = schema->resultset('Project')->find({ projectuid => $projectuid });
+	my $project = get_project_by_uid($projectuid);
 	return 0 unless $project;
 	my $project_creator_id = $project->creator->userid;
 	return get_logged_in_userid() eq $project_creator_id;
