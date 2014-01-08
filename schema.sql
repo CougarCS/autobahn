@@ -74,3 +74,14 @@ CREATE TABLE if not exists projectskill (
 	FOREIGN KEY(projectid) REFERENCES project(projectid),
 	FOREIGN KEY(skillid) REFERENCES skill(skillid)
 );
+
+CREATE TABLE if not exists projectimage (
+	projectid INTEGER NOT NULL PRIMARY KEY,
+
+	originalimage TEXT,      -- inflate to file
+	originalimagemime TEXT,
+	convertedimage TEXT,     -- inflate to file
+	convertedimagemime TEXT,
+
+	FOREIGN KEY(projectid) REFERENCES project(projectid)
+)
