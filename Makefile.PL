@@ -30,7 +30,6 @@ WriteMakefile(
 	'Unicode::CaseFold' => 0,
 	'Moo' => 0,
 	'POE::Component::FeedAggregator' => 0,
-	'MooseX::POE' => 0,
 	'Net::GitHub' => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
