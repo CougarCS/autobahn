@@ -85,3 +85,18 @@ CREATE TABLE if not exists projectimage (
 
 	FOREIGN KEY(projectid) REFERENCES project(projectid)
 )
+
+CREATE TABLE if not exists event (
+	eventid INTEGER NOT NULL PRIMARY KEY,
+	typeid INTEGER NOT NULL,
+	timestamp INTEGER
+
+	FOREIGN KEY(typeid) REFERENCES eventtype(typeid)
+)
+
+-- 1 feed entry
+-- 2 github event
+CREATE TABLE if not exists eventtype (
+	typeid INTEGER,
+	typename TEXT
+)
