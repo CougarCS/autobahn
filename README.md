@@ -31,4 +31,8 @@ skills.
 - run the development server
 
       ./start_dev
+- setup upstream for your git repo
 
+      git remote add upstream https://github.com/zmughal/autobahn.git
+
+- git pull upstream master
