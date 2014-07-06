@@ -53,6 +53,6 @@ skills.
 
 - To get the changes from upstream, run
 
-```shell
-git pull upstream master
-```
+  ```shell
+  git pull upstream master
+  ```
