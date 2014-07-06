@@ -9,16 +9,20 @@ skills.
 - install vagrant
 - run
 
+```shell
       vagrant up
+```
 
 - cp config.yml.example config.yml
 - add a GitHub API token to config.yml in the `Auth::Github` section:
   - if you want to use a server on localhost:8586 for development, use
 
+```yaml
         plugins:
           "Auth::Github":
             client_id: "08ab5c7a5e8ee1449102"
             client_secret: "53bd83ea6a228297d934ddbd09adf83bb54228f0"
+```
 
     in that section.
   - otherwise, register an application at <https://github.com/settings/applications>.
@@ -28,11 +32,22 @@ skills.
         Authorization callback URL: http://localhost:8586/auth/github/callback
 
     change the callback URL to match the port you will run the application on (default: 8586)
+
 - run the development server
 
+```shell
       ./start_dev
+
+```
+
 - setup upstream for your git repo
 
+```shell
       git remote add upstream https://github.com/zmughal/autobahn.git
+```
 
-- git pull upstream master
+- To get the changes from upstream, run
+
+```shell
+git pull upstream master
+```
