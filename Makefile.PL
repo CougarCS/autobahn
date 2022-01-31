@@ -21,6 +21,8 @@ WriteMakefile(
 	'Data::UUID' => 0,
 	'HTML::Entities' => 0,
 	'HTML::FillInForm' => 0,
+	'Test::Most' => 0,
+	'Pithub' => 0,
 	'List::AllUtils' => 0,
 	'Plack' => 0,
 	'URI::Encode' => 0,
